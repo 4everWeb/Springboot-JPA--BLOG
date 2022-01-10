@@ -4,12 +4,15 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +23,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder //빌더패턴 !!
+//orm > > java(다른언어) object >> 테이블로 매핑해줌
+@DynamicInsert //null인 필드 제외하고 insert @ColumnDefault("user)에 null 값이오면 user로 insert 안됌
+//insert 시 null인 필드 제외
 public class User {
 	
 	@Id //primaryKey
@@ -37,9 +43,11 @@ public class User {
 	@Column(nullable = false, length = 50) 
 	private String email;
 	
-	@ColumnDefault("'user'")
-	private String role; 
-	// Enum 을 쓰는게 좋음 // admin,user,manager 도메인(범위)으로 설정가능 (오타입력 x)
+	//@ColumnDefault("'user'")
+	//DB는 RolyType 이라는게 없음 
+	@Enumerated(EnumType.STRING)
+	private RoleType role; 
+	// Enum 을 쓰는게 좋음 // admin, user, manager 도메인(범위)으로 설정가능 (오타입력 x)
 	
 	@CreationTimestamp
 	private Timestamp createDate;
