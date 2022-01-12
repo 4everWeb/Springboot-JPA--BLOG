@@ -17,7 +17,7 @@ function handleToDoSave(event) {
 	// ajax가 통신을 성공하고 서버가 json을 리턴해주면 자동으로 자바 오브젝트로 변환
 	$.ajax({
 		type:"POST",
-		url:"/api/user",
+		url:"/auth/joinProc",
 		data:JSON.stringify(data),  //HTTP body data > MIME 타입 지정 필요
 		contentType:"application/json; charset=utf-8",
 		dataType:"json"  
