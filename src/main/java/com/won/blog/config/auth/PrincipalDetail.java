@@ -7,9 +7,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.won.blog.model.User;
+
+import lombok.Getter;
 // 1. 인터셉터 . 로그인 완료 userDetails 오브젝트를 저장 (principal)
 // 2. 시큐리티 세션에 저장 .
-
+@Getter
 public class PrincipalDetail implements UserDetails {
 	// userDetails 타입 user object ~..
 

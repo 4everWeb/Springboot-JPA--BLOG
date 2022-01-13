@@ -1,19 +1,39 @@
 package com.won.blog.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.won.blog.config.auth.PrincipalDetail;
+import com.won.blog.service.BoardService;
+
 
 @Controller
 public class BoardController {
+	
+	@Autowired
+	private BoardService boardService;
+	
 	//세션 찾는법  - 파라미터
 	//@AuthenticationPrincipal PrincipalDetail principal
 	//principal.getUsername()
 	@GetMapping({ "", "/" })
-	public String index() {
+	public String index(Model mdoel,@PageableDefault(size=3, sort="id", direction=Sort.Direction.DESC) Pageable pageable) {
 		// /WEB-INF/views/index.jsp
-		return "index";
+		mdoel.addAttribute("boards",boardService.글목록(pageable));
+		return "index"; //viewResolver 
 	}
+	
+	
+	//User권한이 필요
+	@GetMapping("/board/saveForm")
+	public String saveForm() {
+		return "board/saveForm";
+	}
+	
 }

@@ -39,8 +39,8 @@ public class Board {
 	@Lob
 	private String content; //썸머노트 라이브러리 <html> 태그 섞여서  디자인되서 대용량이어야함 (@Lob)
 	
-	@ColumnDefault("0")
-	private int count;
+	//@ColumnDefault("0")
+	private int count; //조회수
 	
 	@ManyToOne (fetch = FetchType.EAGER)//Many = Board , User = One  한명의 유저가 여러개의 게시글 작성
 	@JoinColumn(name="userId")
@@ -49,6 +49,7 @@ public class Board {
 	//ORm에선 오브젝트 저장
 	//자동으로 포린키 생성
 	//eager 전략 무조건 가져옴 lazy 전략 필요할때 가져옴
+	
 	@OneToMany(mappedBy = "board", fetch=FetchType.LAZY)  // mappedBy 연관관계의 주인이 아니다(난 fk가 아니다) db에 컬럼을 만들지 마세요
 	private List<Reply> reply;
 	//조인 - 하나의 보드에 여러개의 리플 
