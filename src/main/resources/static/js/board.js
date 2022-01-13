@@ -60,6 +60,35 @@ deleteId.addEventListener("click", handleToDoDelete)
 
 
 
+const updateDo = document.querySelector("#btn-update");
+
+function handleToDoUpdate(event) {
+    event.preventDefault();
+		let id = document.querySelector("#id").value;
+		
+		let data = {
+		title: document.querySelector("#title").value,
+		content: document.querySelector("#content").value,
+	};
+	
+	$.ajax({
+		type:"PUT",
+		url:"/api/board/"+id,
+		data:JSON.stringify(data),
+		contentType:"application/json; charset=utf-8",
+		dataType:"json"  
+	}).done(function(resp){
+		alert("글수정이 완료되었습니다.");
+		location.href="/";
+	}).fail(function(error){
+		alert(JSON.stringify(error));
+	}); 
+	
+}
+if(updateDo != null){
+updateDo.addEventListener("click", handleToDoUpdate)
+}
+
 
 
 
