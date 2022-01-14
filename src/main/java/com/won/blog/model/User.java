@@ -34,7 +34,7 @@ public class User {
 	// 프로젝트에서 연결된 db의 넘버링 전략을 따라감 (오라클 - 시퀀스 , mysql - auto_increment)
  	private int id; //시퀀스, auto_increment
 	
-	@Column(nullable = false, length = 30)
+	@Column(nullable = false, length = 100)
 	private String username; //아이디
 	
 	@Column(nullable = false, length = 100) 

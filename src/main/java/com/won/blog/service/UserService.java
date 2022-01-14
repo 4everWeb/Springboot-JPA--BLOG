@@ -31,6 +31,7 @@ public class UserService {
 		user.setRole(RoleType.USER);
 		userRepository.save(user);
 	}
+	
 	@Transactional
 	public void 회원수정(User user) {
 		//수정 시에는 Jpa 영속성 컨텍스트에 User 오브젝트를 영속화 시키고
