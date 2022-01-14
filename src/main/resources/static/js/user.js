@@ -31,12 +31,41 @@ function handleToDoSave(event) {
 	}); 
 	
 }
-
+if(save != null){
 save.addEventListener("click", handleToDoSave)
+}
 
 
 
+const updateDo = document.querySelector("#btn-update");
 
+function handleToDoUpdate(event) {
+    event.preventDefault();
+		
+		let data = {
+		id: document.querySelector("#id").value,
+		username: document.querySelector("#username").value,
+		password: document.querySelector("#password").value,
+		email: document.querySelector("#email").value,
+	};
+	
+	$.ajax({
+		type:"PUT",
+		url:"/user",
+		data:JSON.stringify(data),
+		contentType:"application/json; charset=utf-8",
+		dataType:"json"  
+	}).done(function(resp){
+		alert("회원수정이 완료되었습니다.");
+		location.href="/";
+	}).fail(function(error){
+		alert(JSON.stringify(error));
+	}); 
+	
+}
+if(updateDo != null){
+updateDo.addEventListener("click", handleToDoUpdate)
+}
 
 
 
