@@ -43,6 +43,7 @@ public class User {
 	@Column(nullable = false, length = 50) 
 	private String email;
 	
+	private String oauth; //kakao, google
 	//@ColumnDefault("'user'")
 	//DB는 RolyType 이라는게 없음 
 	@Enumerated(EnumType.STRING)

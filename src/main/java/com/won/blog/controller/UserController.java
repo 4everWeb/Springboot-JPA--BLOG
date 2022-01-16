@@ -3,11 +3,16 @@ package com.won.blog.controller;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,9 +36,14 @@ import com.won.blog.service.UserService;
 @Controller
 public class UserController {
 	
+	@Value("${won.key}")
+	private String wonKey;
+	
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	@GetMapping("/auth/joinForm")
 	public String joinForm() {
@@ -50,7 +60,7 @@ public class UserController {
 		return "user/updateForm";
 	}
 	@GetMapping("/auth/kakao/callback")
-	public @ResponseBody String kakaoCallback(String code) { //Data를 리턴해주는 컨트롤러 함수
+	public String kakaoCallback(String code) { //Data를 리턴해주는 컨트롤러 함수
 		//POST방식으로 key=value 데이터를 요청(카카오)
 		//Restrofit2
 		//OkHttp
@@ -131,22 +141,33 @@ public class UserController {
 		//강제로 회원가입 
 		System.out.println("블로그서버 유저네임:"+kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId());
 		System.out.println("블로그서버 이메일:"+kakaoProfile.getKakao_account().getEmail());
-		//임의 패스워드
-		UUID garbagePassword = UUID.randomUUID();
-		System.out.println("블로그서버 패스워드" + garbagePassword);
+		//임의 패스워드 UUID -> 중복되지 않는 특정 값을 만들어냄.
+//		UUID garbagePassword = UUID.randomUUID();
+		System.out.println("블로그서버 패스워드" + wonKey);
 		
-		User user = User.builder()
+		User kakaoUser = User.builder()
 				.username(kakaoProfile.getKakao_account().getEmail()+"_"+kakaoProfile.getId())
-				.password(garbagePassword.toString())
+				.password(wonKey)
 				.email(kakaoProfile.getKakao_account().getEmail())
+				.oauth("kakao")
 				.build();
 		
 		//가입자 혹은 비가입자 체크 해서 처리
 		//userService.회원찾기();
 		//2022-01-15 2:59:51 AM
+		User originuser = userService.회원찾기(kakaoUser.getUsername());
+		//orElseGet 처리.  빈 값이더라도 새객체 생성 >> userName을 체크
+		if(originuser.getUsername() == null) {
+			System.out.println("기존 회원이 아닙니다. 자동 회원가입 진행중");
+			userService.회원가입(kakaoUser);
+		}
 		
-		userService.회원가입(user);
+		// 로그인 처리
+		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(kakaoUser.getUsername(), wonKey));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		// 문제 1. 카카오 로그인 사용자는 비밀번호 수정을 못바꾸게 해야함  >> model에 oauth 추가
+		// 문제 2. OAuth 고정 비밀번호 wonKey 유출 위험
 		
-		return "회원가입 완료";
+		return "redirect:/";
 	}
 }
