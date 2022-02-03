@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,8 +52,9 @@ public class Board {
 	//자동으로 포린키 생성
 	//eager 전략 무조건 가져옴 lazy 전략 필요할때 가져옴
 	
+	@JsonIgnoreProperties({"board"})  //무한참조 방지 Reply를 통한 board 호출 안함
 	@OneToMany(mappedBy = "board", fetch=FetchType.LAZY)  // mappedBy 연관관계의 주인이 아니다(난 fk가 아니다) db에 컬럼을 만들지 마세요
-	private List<Reply> reply;
+	private List<Reply> replys;
 	//조인 - 하나의 보드에 여러개의 리플 
 	// 포린키가 필요없음  >> replyId 가 여러개가 들어 갈 수도 있음
 	
