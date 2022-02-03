@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.won.blog.model.Reply;
 
-public interface CommentRepository extends JpaRepository<Reply, Integer>{
+public interface ReplyRepository extends JpaRepository<Reply, Integer>{
 	
 }

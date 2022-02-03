@@ -89,5 +89,34 @@ if(updateDo != null){
 updateDo.addEventListener("click", handleToDoUpdate)
 }
 
+const replySave = document.querySelector("#btn-reply-save");
+
+function handleToDoReply(event) {
+    event.preventDefault();
+	
+	let data = {
+		content: document.querySelector("#reply-content").value,
+		};
+	console.log(data);
+	
+	const boardId = document.querySelector("#boardId").value;
+	
+	$.ajax({
+		type:"POST",
+		url:`/api/board/${boardId}/reply`,
+		data:JSON.stringify(data),
+		contentType:"application/json; charset=utf-8",
+		dataType:"json"  
+	}).done(function(resp){
+		alert("댓글작성이 완료되었습니다.");
+		location.href=`/board/${boardId}`;
+	}).fail(function(error){
+		alert(JSON.stringify(error));
+	}); 
+	
+}
+if(replySave != null){
+replySave.addEventListener("click", handleToDoReply)
+}
 
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.won.blog.config.auth.PrincipalDetail;
 import com.won.blog.dto.ResponseDto;
 import com.won.blog.model.Board;
+import com.won.blog.model.Reply;
 import com.won.blog.model.User;
 import com.won.blog.service.BoardService;
 import com.won.blog.service.UserService;
@@ -42,6 +43,12 @@ public class BoardApiController {
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 
+	@PostMapping("/api/board/{boardId}/reply")
+	public ResponseDto<Integer> replySave(@PathVariable int boardId,@RequestBody Reply reply, @AuthenticationPrincipal PrincipalDetail principal) {
+		
+		boardService.댓글쓰기(principal.getUser(), boardId, reply);
+		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
+	}
 }
 
 
